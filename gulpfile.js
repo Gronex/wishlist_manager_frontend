@@ -42,12 +42,6 @@ gulp.task('html', function () {
     .pipe(gulp.dest(outDir));
 });
 
-gulp.task('move',['scripts', 'html'], function () {
-  return gulp
-    .src(["./build/**/*", "node_modules/**/*", "bower_components/**/*", "css/**/*"], {base: './build'})
-    .pipe(gulp.dest("../"+finalDir));
-});
-
 gulp.task('watch-html', ['html'], () => {
   gulp.watch(paths.html, ['html']);
 });

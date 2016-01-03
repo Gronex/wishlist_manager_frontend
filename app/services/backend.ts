@@ -1,10 +1,14 @@
 import {Injectable} from 'angular2/core';
-import {Http} from 'angular2/http';
+import {Http, Headers} from 'angular2/http';
 
 @Injectable()
 export class BackendService {
   private verbose: boolean = true;
-  private baseUrl: string = "http://localhost:4000/api";
+  private baseUrl: string = "http://localhost:4000";
+  private basePath: string = "/api";
+  private headers: Headers = new Headers({
+    "Content-Type": "application/json"
+  });
 
   constructor(private http: Http){}
 
@@ -13,10 +17,11 @@ export class BackendService {
     if (path) cleanUrl = path.join("/");
     cleanUrl += "/" + resource;
     if (id) cleanUrl += "/" + id;
-    return this.baseUrl + cleanUrl;
+    return this.baseUrl + (/\/auth\//.test(cleanUrl) ? "" : this.basePath) + cleanUrl;
   }
 
-  private wrapData(holder: string, data: any): string{
+  private wrapData(holder: string, data: any, wrap: boolean = true): string{
+    if (!wrap) return JSON.stringify(data);
     var wrapped = {};
     if (holder.endsWith("s")) holder = holder.substring(0, holder.length - 1);
     wrapped[holder] = data;
@@ -27,7 +32,7 @@ export class BackendService {
   get(resource: string, id?: string | number, path?: Array<string>): Promise<any>{
     return new Promise((resolve, reject) => {
       this.http
-      .get(this.urlHandler(path, resource, id))
+      .get(this.urlHandler(path, resource, id), {headers: this.headers})
       .subscribe((resp) => {
         if (resp.status < 300){
           try {
@@ -50,15 +55,15 @@ export class BackendService {
     });
   }
 
-  post(body: any, resource: string, path?: Array<string>): Promise<any>{
+  post(body: any, resource: string, path?: Array<string>, wrap: boolean = true): Promise<any>{
     return new Promise((resolve, reject) => {
       this.http
-        .post(this.urlHandler(path, resource), this.wrapData(resource, body))
+        .post(this.urlHandler(path, resource), this.wrapData(resource, body, wrap), {headers: this.headers})
         .subscribe((resp) => {
           if (resp.status < 300){
             try {
               var data = resp.json();
-              resolve(data);
+              resolve(data.data);
             }
             catch (e) {
               if (this.verbose) {
@@ -79,7 +84,7 @@ export class BackendService {
   put(body: any, resource: string, id: string | number, path?: Array<string>): Promise<any>{
     return new Promise((resolve, reject) => {
       this.http
-        .put(this.urlHandler(path, resource, id), this.wrapData(resource, body))
+        .put(this.urlHandler(path, resource, id), this.wrapData(resource, body), {headers: this.headers})
         .subscribe((resp) => {
           if (resp.status < 300){
             try {
@@ -105,7 +110,7 @@ export class BackendService {
   delete(resource: string, id: string | number, path?: Array<string>){
     return new Promise((resolve, reject) => {
       this.http
-        .delete(this.urlHandler(path, resource, id))
+        .delete(this.urlHandler(path, resource, id), {headers: this.headers})
         .subscribe((resp) => {
           if (resp.status < 300) resolve(resp);
           else {
@@ -114,5 +119,14 @@ export class BackendService {
           }
         });
     });
+  }
+
+  setHeader(header: string, value: string){
+    this.headers.delete(header);
+    this.headers.append(header, value);
+  }
+
+  removeHeader(header: string){
+    this.headers.delete(header);
   }
 }

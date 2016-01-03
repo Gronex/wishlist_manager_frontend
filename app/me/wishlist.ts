@@ -1,6 +1,8 @@
 import { Component } from 'angular2/core';
 import {Table, TableData, TableHeader, TableRow} from '../directives/table/table';
+import {Router} from 'angular2/router';
 import { BackendService } from '../services/backend';
+import {AuthenticationService} from '../services/authentication';
 
 @Component({
   templateUrl: "build/me/wishlist.html",
@@ -14,19 +16,20 @@ export class WishlistComponent {
   ];
 
   private wishlist: TableRow[] = [];
-  private userId: number;
   private editing: {};
 
-  constructor(private backend: BackendService){
+  constructor(private backend: BackendService, private auth: AuthenticationService, private router: Router){
     this.wishlist = [];
     this.clearEdit();
   }
 
   ngOnInit() {
-    this.backend.get('users', 1)
+    if (!this.auth.currentUser()) {
+      this.router.navigate(["Home"]);
+      return;
+    }
+    this.backend.get('users', this.auth.currentUser().id)
       .then(resp => {
-        this.userId = resp.id;
-
         resp.data.items.forEach(item => {
           var rowData = new Map<string, TableData>();
           rowData.set('id', new TableData(item.id));

@@ -34,8 +34,8 @@ export class App{
     this.user.email = "mads.slotsbo@gmail.com"
     this.user.birthday = new Date("1993-29-01");
 */
-    authService.login("test@test.com", "test")
-      .then((_) => {
+    authService.login("test@test.com", "Password1")
+      .then(() => {
         this.loggedIn = true;
         this.user = authService.currentUser();
       });

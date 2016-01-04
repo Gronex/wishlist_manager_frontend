@@ -17,6 +17,7 @@ export class AuthenticationService {
     .then((auth) => {
       this.auth = auth;
       this.setAuth();
+      this.currentUser();
     });
   }
 
@@ -25,15 +26,17 @@ export class AuthenticationService {
   }
 
   setAuth(){
-    if (this.userLoaded()){
+    if (!this.userLoaded()){
       var auth = localStorage.getItem("auth");
-      this.backend.setHeader("Authorization", auth.token);
-      this.auth = JSON.parse(auth);
+      if (auth){
+        this.backend.setHeader("Authorization", auth.token);
+        this.auth = JSON.parse(auth);
+      }
     }
     else {
       this.backend.setHeader("Authorization", this.auth["token"]);
     }
-    localStorage.setItem("auth", JSON.stringify(this.auth));
+    if (this.auth) localStorage.setItem("auth", JSON.stringify(this.auth));
   }
 
   clearAuth(){
@@ -44,7 +47,7 @@ export class AuthenticationService {
 
   currentUser(){
     this.setAuth();
-    if (this.userLoaded()) return undefined;
+    if (!this.userLoaded()) return undefined;
     return {
       id: this.auth["id"],
       name: this.auth["name"]
@@ -52,6 +55,6 @@ export class AuthenticationService {
   }
 
   private userLoaded(): boolean {
-    return (!this.auth || this.auth === {} || this.auth["id"] === undefined);
+    return (this.auth === {} || (!!this.auth && this.auth["id"] !== undefined));
   }
 }

@@ -10,7 +10,7 @@
 
     <tr *ngFor="#row of data" [ngClass]="{clickable: link}" (click)="click(row)">
       <td *ngFor="#header of headers">
-        <a *ngIf="row.get(header.identifier).link" href="{{formatLink(row.get(header.identifier).link)}}">{{row.get(header.identifier).format()}}</a>
+        <a *ngIf="row.get(header.identifier).link" href="{{formatLink(row.get(header.identifier).onClick())}}">{{row.get(header.identifier).format()}}</a>
         <span *ngIf="!row.get(header.identifier).link">{{row.get(header.identifier).format()}}</span>
       </td>
     </tr>

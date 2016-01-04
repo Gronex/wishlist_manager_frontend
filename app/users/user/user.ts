@@ -1,7 +1,7 @@
 import {Component} from 'angular2/core';
 import {RouteParams} from 'angular2/router';
 import {BackendService} from '../../services/backend';
-import {Table, TableData, TableRow, TableHeader} from '../../directives/table/table';
+import {Table, TableData, TableRow, TableHeader, DataType} from '../../directives/table/table';
 
 @Component({
   directives: [Table],
@@ -30,7 +30,7 @@ export class UserComponent {
           var rowData = new Map<string, TableData>();
           rowData.set('name', new TableData(item.name));
           rowData.set('description', new TableData(item.description));
-          rowData.set('link', new TableData(item.link, item.link));
+          rowData.set('link', new TableData(item.link, DataType.Link));
           this.wishlist.push(new TableRow(rowData));
         });
       });

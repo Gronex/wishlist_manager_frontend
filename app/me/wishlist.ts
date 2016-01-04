@@ -1,5 +1,5 @@
 import { Component } from 'angular2/core';
-import {Table, TableData, TableHeader, TableRow} from '../directives/table/table';
+import {Table, TableData, TableHeader, TableRow, DataType} from '../directives/table/table';
 import {Router} from 'angular2/router';
 import { BackendService } from '../services/backend';
 import {AuthenticationService} from '../services/authentication';

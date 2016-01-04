@@ -11,6 +11,12 @@ export class TableHeader {
   }
 }
 
+export enum DataType {
+  Text,
+  Link,
+  WarningButton
+}
+
 export class TableRow {
 
   constructor(private data: Map<string, TableData>, private link?: (row: TableRow) => void){
@@ -30,10 +36,22 @@ export class TableRow {
 
 export class TableData {
   private data: any;
-  private link: string;
+  private onClick: () => any;
+  private type: DataType;
 
-  constructor(data: any, link?: string){
-    this.link = link;
+  constructor(data: any, type?: DataType, onClick?: () => any){
+    if (!type) this.type = DataType.Text;
+    else this.type = type;
+
+//FIXME: onClick is undefined
+    if (type == DataType.Link && !onClick){
+      console.log("hello")
+      this.onClick = () => data.toString();
+    }
+    else{
+      this.onClick = onClick;
+    }
+    console.log(onClick);
     this.data = data;
   }
 

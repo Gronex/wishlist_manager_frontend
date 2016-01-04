@@ -63,7 +63,8 @@ export class BackendService {
           if (resp.status < 300){
             try {
               var data = resp.json();
-              resolve(data.data);
+              if (data.data) resolve(data.data);
+              else resolve(data);
             }
             catch (e) {
               if (this.verbose) {

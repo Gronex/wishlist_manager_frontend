@@ -12,7 +12,9 @@ export class WishlistComponent {
   private headers = [
     new TableHeader("name", "Name"),
     new TableHeader("description", "Description"),
-    new TableHeader("link", "Link")
+    new TableHeader("link", "Link"),
+    new TableHeader("editBtn", ""),
+    new TableHeader("deleteBtn", "")
   ];
 
   private wishlist: TableRow[] = [];
@@ -36,7 +38,12 @@ export class WishlistComponent {
           rowData.set('name', new TableData(item.name));
           rowData.set('description', new TableData(item.description));
           rowData.set('link', new TableData(item.link, DataType.Link));
-          this.wishlist.push(new TableRow(rowData, (row) => this.chooseItem(row, this.wishlist)));
+          rowData.set('editBtn', new TableData("Edit", DataType.Button, () => {
+            var row = this.getRow(rowData.get('id').format());
+            this.chooseItem(row, this.wishlist);
+          }));
+          rowData.set('deleteBtn', new TableData("Delete", DataType.Button, () => this.removeItem(rowData.get('id').format()), "btn btn-danger"));
+          this.wishlist.push(new TableRow(rowData));
         });
       });
   }
@@ -80,9 +87,27 @@ export class WishlistComponent {
           rowData.set('name', new TableData(item.name));
           rowData.set('description', new TableData(item.description));
           rowData.set('link', new TableData(item.link, DataType.Link));
+          rowData.set('editBtn', new TableData("Edit", DataType.Button, () => {
+            var row = this.getRow(rowData.get('id').format());
+            this.chooseItem(row, this.wishlist);
+          }));
+          rowData.set('deleteBtn', new TableData("Delete", DataType.Button, () => this.removeItem(rowData.get('id').format()), "btn btn-danger"));
           this.wishlist.push(new TableRow(rowData, (row) => this.chooseItem(row, this.wishlist)));
         });
     }
     this.clearEdit();
+  }
+
+  private getRow(id){
+    return this.wishlist .find((row) => row.get('id').format() == id);
+  }
+
+  private removeItem(id){
+    var row = this.getRow(id);
+    var index = this.wishlist.indexOf(row);
+    if (index >= 0){
+      this.backend.delete("items", row.get('id').format())
+        .then(() => this.wishlist.splice(index, 1));
+    }
   }
 }

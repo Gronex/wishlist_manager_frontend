@@ -14,7 +14,7 @@ export class TableHeader {
 export enum DataType {
   Text,
   Link,
-  WarningButton
+  Button
 }
 
 export class TableRow {
@@ -39,13 +39,16 @@ export class TableData {
   private onClick: () => any;
   private defaultLink: boolean;
   private type: DataType;
+  private btnStyle: string;
 
-  constructor(data: any, type?: DataType, onClick?: () => any){
+  constructor(data: any, type?: DataType, onClick?: () => any, btnStyle?: string){
+    if (btnStyle) this.btnStyle = btnStyle;
+    else this.btnStyle = "btn btn-default";
     if (!type) this.type = DataType.Text;
     else this.type = type;
 
     if (type == DataType.Link && !onClick){
-      this.onClick = () => data.toString();
+      this.onClick = () => data;
       this.defaultLink = true;
     }
     else{
@@ -55,6 +58,13 @@ export class TableData {
     this.data = data;
   }
 
+  getbtnStyle(): string{
+    return this.btnStyle;
+  }
+
+/**
+Formats dates nicely, otherwise returns the data
+**/
   format(): string {
     if (this.data instanceof Date){
       return this.data.toLocaleDateString([], {year: "numeric", month: "2-digit", day: "2-digit"});
@@ -66,7 +76,7 @@ export class TableData {
 
   update(val : any){
     if (this.type == DataType.Link && this.defaultLink){
-      this.onClick = () => val.toString();
+      this.onClick = () => val;
     }
     this.data = val;
   }

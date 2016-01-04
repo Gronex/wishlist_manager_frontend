@@ -11,8 +11,8 @@
     <tr *ngFor="#row of data" [ngClass]="{clickable: link}" (click)="click(row)">
       <td *ngFor="#header of headers">
         <span [ngSwitch]="row.get(header.identifier).type">
-          <a *ngSwitchWhen="1" href="{{formatLink(row.get(header.identifier).onClick())}}">{{row.get(header.identifier).format()}}</a>
-          <button *ngSwitchWhen="2" (click)="row.get(header.identifier).onClick()">{{row.get(header.identifier).format()}}</button>
+          <a *ngSwitchWhen="1" href="{{formatLink(row.get(header.identifier).onClick())}}" target="_blank">{{row.get(header.identifier).format()}}</a>
+          <button *ngSwitchWhen="2" (click)="row.get(header.identifier).onClick()" [ngClass]="row.get(header.identifier).btnStyle">{{row.get(header.identifier).format()}}</button>
           <span *ngSwitchDefault>{{row.get(header.identifier).format()}}</span>
         </span>
       </td>

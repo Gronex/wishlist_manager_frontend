@@ -35,7 +35,7 @@ export class WishlistComponent {
           rowData.set('id', new TableData(item.id));
           rowData.set('name', new TableData(item.name));
           rowData.set('description', new TableData(item.description));
-          rowData.set('link', new TableData(item.link, item.link));
+          rowData.set('link', new TableData(item.link, DataType.Link));
           this.wishlist.push(new TableRow(rowData, (row) => this.chooseItem(row, this.wishlist)));
         });
       });
@@ -79,7 +79,7 @@ export class WishlistComponent {
           rowData.set('id', new TableData(item.id));
           rowData.set('name', new TableData(item.name));
           rowData.set('description', new TableData(item.description));
-          rowData.set('link', new TableData(item.link, item.link));
+          rowData.set('link', new TableData(item.link, DataType.Link));
           this.wishlist.push(new TableRow(rowData, (row) => this.chooseItem(row, this.wishlist)));
         });
     }

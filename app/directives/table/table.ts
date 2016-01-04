@@ -1,5 +1,5 @@
 import {Component, Input} from 'angular2/core';
-import {NgClass} from 'angular2/common';
+import {NgClass, NgSwitch, NgSwitchWhen, NgSwitchDefault} from 'angular2/common';
 
 export class TableHeader {
   private identifier: string;
@@ -37,21 +37,21 @@ export class TableRow {
 export class TableData {
   private data: any;
   private onClick: () => any;
+  private defaultLink: boolean;
   private type: DataType;
 
   constructor(data: any, type?: DataType, onClick?: () => any){
     if (!type) this.type = DataType.Text;
     else this.type = type;
 
-//FIXME: onClick is undefined
     if (type == DataType.Link && !onClick){
-      console.log("hello")
       this.onClick = () => data.toString();
+      this.defaultLink = true;
     }
     else{
+      this.defaultLink = false;
       this.onClick = onClick;
     }
-    console.log(onClick);
     this.data = data;
   }
 
@@ -65,6 +65,9 @@ export class TableData {
   }
 
   update(val : any){
+    if (this.type == DataType.Link && this.defaultLink){
+      this.onClick = () => val.toString();
+    }
     this.data = val;
   }
 }
@@ -72,7 +75,7 @@ export class TableData {
 @Component({
   templateUrl: "build/directives/table/table.html",
   selector: "custom-table",
-  directives: [NgClass]
+  directives: [NgClass, NgSwitch, NgSwitchWhen, NgSwitchDefault]
 })
 export class Table{
   private hasHttpRegEx = new RegExp("^http(s)?://");

@@ -7,6 +7,7 @@ import {UsersComponent} from './users/users';
 import {UserComponent} from './users/user/user';
 import {WishlistComponent} from './me/wishlist';
 import {User} from './model/user';
+import {LoginComponent} from './login/login';
 import {AuthenticationService} from './services/authentication';
 
 @Component({
@@ -19,7 +20,8 @@ import {AuthenticationService} from './services/authentication';
   { path: 'info', component: Info, name: "Info"},
   { path: 'users', component: UsersComponent, name: "Users"},
   { path: 'users/:id', component: UserComponent, name: "Wishlist"},
-  { path: 'wishlist', component: WishlistComponent, name: "MyWishlist"}
+  { path: 'wishlist', component: WishlistComponent, name: "MyWishlist"},
+  { path: 'login', component: LoginComponent, name: "Login"},
 ])
 export class App{
   //private user: User = new User();
@@ -34,11 +36,11 @@ export class App{
     this.user.email = "mads.slotsbo@gmail.com"
     this.user.birthday = new Date("1993-29-01");
 */
-    authService.login("test@test.com", "Password1")
+  /*  authService.login("test@test.com", "Password1")
       .then(() => {
         this.loggedIn = true;
         this.user = authService.currentUser();
       });
-
+*/
   }
 }
